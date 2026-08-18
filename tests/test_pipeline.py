@@ -36,7 +36,7 @@ def test_pipeline():
         """
         SELECT *
         FROM jobs
-        WHERE source = ? AND source_job_id = ?
+        WHERE source = %s AND source_job_id = %s
         """,
         ("jobicy", 999999)
     ).fetchone()
@@ -44,8 +44,8 @@ def test_pipeline():
     connection.close()
 
     assert row is not None
-    assert row["title"] == "Test Data Engineer"
-    assert row["company"] == "JobPulse Test"
+    assert row[3] == "Test Data Engineer"
+    assert row[4] == "JobPulse Test"
 
 def test_pipeline_is_idempotent():
 

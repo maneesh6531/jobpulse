@@ -1,57 +1,60 @@
-import sqlite3
-from pathlib import Path
+import psycopg
 
-
-DATABASE_PATH = Path("data/jobpulse.db")
+from app.core.config import settings
 
 
 def get_connection():
-    DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-    connection = sqlite3.connect(DATABASE_PATH)
+    return psycopg.connect(
+        settings.database_url
+    )
 
-    connection.row_factory = sqlite3.Row
-
-    return connection
 
 def initialize_database():
 
     connection = get_connection()
 
-    connection.execute(
-        """
-        CREATE TABLE IF NOT EXISTS jobs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+    try:
 
-            source TEXT NOT NULL,
-            source_job_id INTEGER NOT NULL,
+        with connection.cursor() as cursor:
 
-            title TEXT NOT NULL,
-            company TEXT NOT NULL,
+            cursor.execute(
+                """
+                CREATE TABLE IF NOT EXISTS jobs (
+                    id BIGSERIAL PRIMARY KEY,
 
-            location TEXT,
-            job_type TEXT NOT NULL,
-            industry TEXT NOT NULL,
-            level TEXT,
+                    source TEXT NOT NULL,
+                    source_job_id BIGINT NOT NULL,
 
-            description TEXT NOT NULL,
-            excerpt TEXT,
+                    title TEXT NOT NULL,
+                    company TEXT NOT NULL,
 
-            job_url TEXT NOT NULL,
+                    location TEXT,
+                    job_type JSONB NOT NULL,
+                    industry JSONB NOT NULL,
+                    level TEXT,
 
-            published_at TEXT NOT NULL,
+                    description TEXT NOT NULL,
+                    excerpt TEXT,
 
-            salary_min REAL,
-            salary_max REAL,
-            salary_currency TEXT,
+                    job_url TEXT NOT NULL,
 
-            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    published_at TIMESTAMPTZ NOT NULL,
 
-            UNIQUE(source, source_job_id)
-        )
-        """
-    )
+                    salary_min DOUBLE PRECISION,
+                    salary_max DOUBLE PRECISION,
+                    salary_currency TEXT,
 
-    connection.commit()
-    connection.close()
+                    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+                    UNIQUE(source, source_job_id)
+                )
+                """
+            )
+
+        connection.commit()
+
+    finally:
+
+        connection.close()

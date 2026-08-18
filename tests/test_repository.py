@@ -1,5 +1,3 @@
-import sqlite3
-
 from app.models.job import Job
 from app.storage.database import get_connection, initialize_database
 from app.storage.job_repository import JobRepository
@@ -52,7 +50,7 @@ def test_save_job():
         """
         SELECT *
         FROM jobs
-        WHERE source = ? AND source_job_id = ?
+        WHERE source = %s AND source_job_id = %s
         """,
         ("jobicy", 12345)
     ).fetchone()
@@ -60,8 +58,8 @@ def test_save_job():
     connection.close()
 
     assert row is not None
-    assert row["title"] == "Data Engineer"
-    assert row["company"] == "Test Company"
+    assert row[3] == "Data Engineer"
+    assert row[4] == "Test Company"
 
 
 def test_duplicate_job_is_not_inserted():
@@ -85,11 +83,11 @@ def test_duplicate_job_is_not_inserted():
         """
         SELECT COUNT(*) AS count
         FROM jobs
-        WHERE source = ? AND source_job_id = ?
+        WHERE source = %s AND source_job_id = %s
         """,
         ("jobicy", 12345)
     ).fetchone()
 
     connection.close()
 
-    assert row["count"] == 1
+    assert row[0] == 1
