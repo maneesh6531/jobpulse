@@ -1,10 +1,18 @@
+import time
+
 import httpx
+
+from app.core.config import settings
+from app.core.logger import logger
 
 
 class JobicyClient:
-    BASE_URL = "https://jobicy.com/api/v2/remote-jobs"
+
+    def __init__(self, base_url=None):
+        self.base_url = base_url or settings.jobicy_api_url
 
     def fetch_jobs(self, count=10, tag=None, geo=None, industry=None):
+
         params = {
             "count": count
         }
@@ -18,12 +26,81 @@ class JobicyClient:
         if industry:
             params["industry"] = industry
 
-        response = httpx.get(
-            self.BASE_URL,
-            params=params,
-            timeout=10.0
-        )
+        for attempt in range(settings.max_retries + 1):
 
-        response.raise_for_status()
+            try:
+                response = httpx.get(
+                    self.base_url,
+                    params=params,
+                    timeout=settings.request_timeout
+                )
 
-        return response.json()
+                if response.status_code == 429:
+
+                    if attempt == settings.max_retries:
+                        logger.error(
+                            "Rate limit exhausted | attempts=%s",
+                            attempt + 1
+                        )
+                        response.raise_for_status()
+
+                    delay = settings.base_retry_delay * (2 ** attempt)
+
+                    logger.warning(
+                        "Rate limited | attempt=%s | delay=%s",
+                        attempt + 1,
+                        delay
+                    )
+
+                    time.sleep(delay)
+                    continue
+
+                if response.status_code in (500, 502, 503, 504):
+
+                    if attempt == settings.max_retries:
+                        logger.error(
+                            "Server failure exhausted | status_code=%s | attempts=%s",
+                            response.status_code,
+                            attempt + 1
+                        )
+                        response.raise_for_status()
+
+                    delay = settings.base_retry_delay * (2 ** attempt)
+
+                    logger.warning(
+                        "Server error | status_code=%s | attempt=%s | delay=%s",
+                        response.status_code,
+                        attempt + 1,
+                        delay
+                    )
+
+                    time.sleep(delay)
+                    continue
+
+                response.raise_for_status()
+
+                return response.json()
+
+            except (
+                httpx.TimeoutException,
+                httpx.ConnectError
+            ) as error:
+
+                if attempt == settings.max_retries:
+                    logger.error(
+                        "Network failure exhausted | attempts=%s | error=%s",
+                        attempt + 1,
+                        error
+                    )
+                    raise error
+
+                delay = settings.base_retry_delay * (2 ** attempt)
+
+                logger.warning(
+                    "Network error | error=%s | attempt=%s | delay=%s",
+                    error,
+                    attempt + 1,
+                    delay
+                )
+
+                time.sleep(delay)
