@@ -4,6 +4,8 @@ import httpx
 
 from app.core.config import settings
 from app.core.logger import logger
+from app.ingestion.geo import validate_and_normalize_geo
+from app.ingestion.industry import validate_and_normalize_industry
 
 
 class JobicyClient:
@@ -20,11 +22,13 @@ class JobicyClient:
         if tag:
             params["tag"] = tag
 
-        if geo:
-            params["geo"] = geo
+        normalized_geo = validate_and_normalize_geo(geo)
+        if normalized_geo:
+            params["geo"] = normalized_geo
 
-        if industry:
-            params["industry"] = industry
+        normalized_industry = validate_and_normalize_industry(industry)
+        if normalized_industry:
+            params["industry"] = normalized_industry
 
         for attempt in range(settings.max_retries + 1):
 

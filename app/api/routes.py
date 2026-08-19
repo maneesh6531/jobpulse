@@ -36,6 +36,11 @@ def ingest_jobs(
             "result": result
         }
 
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
     except Exception as error:
         raise HTTPException(
             status_code=500,

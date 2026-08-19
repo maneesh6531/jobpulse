@@ -47,6 +47,70 @@ export const IngestModal = ({
       return;
     }
 
+    // Validate and normalize Geo input if provided
+    const SUPPORTED_GEOS = ['usa', 'europe', 'apac', 'latam', 'canada', 'uk', 'anywhere'];
+    const FRIENDLY_GEO_MAP = {
+      'usa': 'usa', 'us': 'usa', 'united states': 'usa',
+      'europe': 'europe', 'eu': 'europe',
+      'apac': 'apac', 'asia-pacific': 'apac',
+      'latam': 'latam', 'latin america': 'latam',
+      'canada': 'canada',
+      'uk': 'uk', 'united kingdom': 'uk',
+      'anywhere': 'anywhere', 'worldwide': 'anywhere', 'global': 'anywhere'
+    };
+
+    let normalizedGeo = undefined;
+    const rawGeo = geo.trim();
+    if (rawGeo) {
+      const lowerGeo = rawGeo.toLowerCase();
+      if (FRIENDLY_GEO_MAP[lowerGeo]) {
+        normalizedGeo = FRIENDLY_GEO_MAP[lowerGeo];
+      } else if (SUPPORTED_GEOS.includes(lowerGeo)) {
+        normalizedGeo = lowerGeo;
+      } else {
+        setValidationError(
+          `Invalid Target Geo "${rawGeo}". Jobicy expects a valid location slug (e.g. usa, europe, apac, latam, canada, uk, anywhere). Note: "Remote" is a UI concept, not a valid location slug.`
+        );
+        return;
+      }
+    }
+
+    // Validate and normalize Industry input if provided
+    const SUPPORTED_INDUSTRIES = [
+      'engineering', 'marketing', 'data-science', 'business', 'copywriting',
+      'supporting', 'management', 'hr', 'legal', 'dev', 'admin', 'seller', 'seo', 'smm'
+    ];
+    const FRIENDLY_INDUSTRY_MAP = {
+      'engineering': 'engineering', 'eng': 'engineering',
+      'marketing': 'marketing', 'mktg': 'marketing',
+      'data-science': 'data-science', 'data science': 'data-science',
+      'business': 'business', 'biz': 'business',
+      'copywriting': 'copywriting',
+      'supporting': 'supporting', 'support': 'supporting',
+      'management': 'management',
+      'hr': 'hr', 'human resources': 'hr',
+      'legal': 'legal',
+      'dev': 'dev', 'development': 'dev',
+      'admin': 'admin', 'administration': 'admin',
+      'seller': 'seller', 'seo': 'seo', 'smm': 'smm'
+    };
+
+    let normalizedIndustry = undefined;
+    const rawIndustry = industry.trim();
+    if (rawIndustry) {
+      const lowerInd = rawIndustry.toLowerCase();
+      if (FRIENDLY_INDUSTRY_MAP[lowerInd]) {
+        normalizedIndustry = FRIENDLY_INDUSTRY_MAP[lowerInd];
+      } else if (SUPPORTED_INDUSTRIES.includes(lowerInd)) {
+        normalizedIndustry = lowerInd;
+      } else {
+        setValidationError(
+          `Invalid Target Industry "${rawIndustry}". Jobicy expects a supported industry category slug (e.g. engineering, marketing, data-science). Note: "devops" is not a valid Jobicy industry slug.`
+        );
+        return;
+      }
+    }
+
     setValidationError('');
     setLoading(true);
     setLastRequestedCount(numCount);
@@ -54,8 +118,8 @@ export const IngestModal = ({
     try {
       const response = await apiService.ingestJobs({
         count: numCount,
-        geo: geo.trim() || undefined,
-        industry: industry.trim() || undefined,
+        geo: normalizedGeo,
+        industry: normalizedIndustry,
         tag: tag.trim() || undefined,
       });
 
@@ -183,21 +247,39 @@ export const IngestModal = ({
               <input
                 type="text"
                 value={geo}
-                onChange={(e) => setGeo(e.target.value)}
-                placeholder="e.g. Remote"
+                onChange={(e) => {
+                  setGeo(e.target.value);
+                  if (validationError) setValidationError('');
+                }}
+                placeholder="e.g. usa, europe, apac"
                 className="w-full rounded-xl border border-slate-200 bg-white py-2 px-3 text-slate-800 placeholder-slate-400 focus:border-teal-500 focus:outline-none"
               />
+              <p className="mt-1 text-[10px] text-slate-400">Slugs: usa, europe, apac, latam, canada, uk, anywhere</p>
             </div>
 
             <div>
               <label className="block text-slate-700 font-semibold mb-1">Target Industry</label>
               <input
                 type="text"
+                list="industry-presets"
                 value={industry}
-                onChange={(e) => setIndustry(e.target.value)}
-                placeholder="e.g. devops"
+                onChange={(e) => {
+                  setIndustry(e.target.value);
+                  if (validationError) setValidationError('');
+                }}
+                placeholder="e.g. engineering, marketing, data-science"
                 className="w-full rounded-xl border border-slate-200 bg-white py-2 px-3 text-slate-800 placeholder-slate-400 focus:border-teal-500 focus:outline-none"
               />
+              <datalist id="industry-presets">
+                <option value="engineering" label="Engineering" />
+                <option value="marketing" label="Marketing" />
+                <option value="data-science" label="Data Science" />
+                <option value="business" label="Business" />
+                <option value="management" label="Management" />
+                <option value="hr" label="HR" />
+                <option value="dev" label="Dev" />
+              </datalist>
+              <p className="mt-1 text-[10px] text-slate-400">Slugs: engineering, marketing, data-science, business, dev...</p>
             </div>
           </div>
 
