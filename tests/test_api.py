@@ -51,3 +51,16 @@ def test_ingest_with_mock_source(monkeypatch):
     assert data["status"] == "success"
     assert data["result"]["fetched"] == 1
     assert data["result"]["unique"] == 1
+
+
+def test_cors_preflight():
+    headers = {
+        "Origin": "http://localhost:5173",
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "content-type",
+    }
+    
+    for path in ["/health", "/jobs", "/ingest"]:
+        res = client.options(path, headers=headers)
+        assert res.status_code == 200
+        assert res.headers.get("access-control-allow-origin") == "http://localhost:5173"
