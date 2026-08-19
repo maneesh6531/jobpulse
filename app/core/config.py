@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
 
     database_url: str
+    test_database_url: str | None = None
 
     jobicy_api_url: str = "https://jobicy.com/api/v2/remote-jobs"
 

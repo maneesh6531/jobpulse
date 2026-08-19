@@ -1,10 +1,21 @@
+import os
 import socket
 import threading
 import time
 import pytest
 import uvicorn
 
+from app.storage.database import get_database_url, verify_safe_test_db, initialize_database
 from tests.mock_source import app as mock_app
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_test_database():
+    os.environ["USE_TEST_DB"] = "true"
+    db_url = get_database_url()
+    verify_safe_test_db(db_url)
+    print(f"\n[pytest] Active Test Database URL: {db_url}")
+    initialize_database()
 
 
 class MockServerThread(threading.Thread):

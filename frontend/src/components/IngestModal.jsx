@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Loader2, Sparkles, Terminal, X } from 'lucide-react';
+import { CheckCircle2, Info, Loader2, Sparkles, Terminal, X } from 'lucide-react';
 import { apiService } from '../services/api';
 
 export const IngestModal = ({
@@ -15,6 +15,7 @@ export const IngestModal = ({
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [validationError, setValidationError] = useState('');
+  const [lastRequestedCount, setLastRequestedCount] = useState(null);
 
   if (!isOpen) return null;
 
@@ -48,6 +49,7 @@ export const IngestModal = ({
 
     setValidationError('');
     setLoading(true);
+    setLastRequestedCount(numCount);
 
     try {
       const response = await apiService.ingestJobs({
@@ -126,7 +128,7 @@ export const IngestModal = ({
                   setCount(e.target.value);
                   if (validationError) setValidationError('');
                 }}
-                placeholder="e.g. 10, 50, 100"
+                placeholder="e.g. 10, 50, 100, 120"
                 className={`w-full rounded-xl border ${
                   validationError
                     ? 'border-rose-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500'
@@ -140,6 +142,11 @@ export const IngestModal = ({
                 <option value="50" label="50 Listings" />
               </datalist>
             </div>
+
+            {/* Hint message below count input */}
+            <p className="mt-1 text-[11px] text-slate-400">
+              Jobicy returns up to 100 jobs per request.
+            </p>
 
             {/* Convenient Preset Badges */}
             <div className="flex items-center space-x-1.5 mt-2">
@@ -229,6 +236,11 @@ export const IngestModal = ({
 
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <div className="flex justify-between items-center bg-white/90 rounded-xl px-3 py-2 border border-teal-100/80 shadow-2xs">
+                  <span className="text-slate-500 font-sans font-semibold">Requested</span>
+                  <span className="font-bold text-[#111A35] text-sm">{lastRequestedCount}</span>
+                </div>
+
+                <div className="flex justify-between items-center bg-white/90 rounded-xl px-3 py-2 border border-teal-100/80 shadow-2xs">
                   <span className="text-slate-500 font-sans font-semibold">Fetched</span>
                   <span className="font-bold text-[#111A35] text-sm">{result.result?.fetched ?? 0}</span>
                 </div>
@@ -243,13 +255,22 @@ export const IngestModal = ({
                   <span className="font-bold text-teal-700 text-sm">{result.result?.inserted ?? 0}</span>
                 </div>
 
-                <div className="flex justify-between items-center bg-white/90 rounded-xl px-3 py-2 border border-teal-100/80 shadow-2xs">
+                <div className="col-span-2 flex justify-between items-center bg-white/90 rounded-xl px-3 py-2 border border-teal-100/80 shadow-2xs">
                   <span className="text-slate-500 font-sans font-semibold">Duplicates</span>
                   <span className="font-bold text-amber-700 text-sm">
                     {Math.max(0, (result.result?.unique ?? 0) - (result.result?.inserted ?? 0))}
                   </span>
                 </div>
               </div>
+
+              {lastRequestedCount !== null && lastRequestedCount > (result.result?.fetched ?? 0) && (
+                <div className="flex items-center space-x-2 rounded-xl bg-slate-100/80 border border-slate-200/80 px-3 py-2 text-[11px] text-slate-600 font-medium">
+                  <Info className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" />
+                  <span>
+                    Jobicy returned {result.result?.fetched ?? 0} jobs (requested {lastRequestedCount}).
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
@@ -278,3 +299,4 @@ export const IngestModal = ({
     </div>
   );
 };
+
