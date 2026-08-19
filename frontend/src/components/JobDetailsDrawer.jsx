@@ -56,11 +56,11 @@ export const JobDetailsDrawer = ({ job, onClose }) => {
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
       />
 
-      <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
+      <div className="fixed inset-y-0 right-0 flex max-w-full pl-0 sm:pl-10">
         <div className="relative w-screen max-w-2xl transform transition-transform duration-300 ease-in-out border-l border-slate-200 bg-white shadow-2xl">
           
           {/* Header Bar */}
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/95 px-6 py-4 backdrop-blur-md">
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/95 px-4 sm:px-6 py-3 sm:py-4 backdrop-blur-md">
             
             <div className="flex items-center space-x-2">
               <span className="inline-flex items-center space-x-1.5 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700">

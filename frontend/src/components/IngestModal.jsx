@@ -135,7 +135,7 @@ export const IngestModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
       {/* Backdrop */}
       <div
         onClick={onClose}
@@ -143,7 +143,7 @@ export const IngestModal = ({
       />
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white shadow-2xl p-6 z-10 space-y-5">
+      <div className="relative w-full max-w-md my-auto rounded-2xl border border-slate-200 bg-white shadow-2xl p-4 sm:p-6 z-10 space-y-4 sm:space-y-5 max-h-[90vh] overflow-y-auto">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">

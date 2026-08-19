@@ -19,21 +19,21 @@ export const Header = ({
           <div className="lg:col-span-7 space-y-6">
             
             {/* Headline */}
-            <h1 className="text-4xl font-extrabold tracking-tight text-[#111A35] sm:text-5xl lg:text-6xl leading-[1.1]">
+            <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#111A35] leading-[1.1] break-words">
               Opportunities <br />
               that <span className="bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">move careers.</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="max-w-xl text-base text-slate-600 sm:text-lg leading-relaxed font-normal">
+            <p className="max-w-xl text-sm sm:text-lg text-slate-600 leading-relaxed font-normal">
               Real-time. Normalized. Reliable. Fresh job listings from multiple sources, engineered into one intelligent feed.
             </p>
 
             {/* Quick Metric Pills */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
               
-              <div className="flex items-center space-x-2 rounded-2xl bg-white px-3.5 py-2 border border-slate-200/80 shadow-sm">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+              <div className="flex items-center space-x-2 rounded-2xl bg-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 border border-slate-200/80 shadow-sm">
+                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-teal-50 text-teal-600 flex-shrink-0">
                   <Briefcase className="h-4 w-4" />
                 </div>
                 <div>
@@ -44,8 +44,8 @@ export const Header = ({
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2 rounded-2xl bg-white px-3.5 py-2 border border-slate-200/80 shadow-sm">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+              <div className="flex items-center space-x-2 rounded-2xl bg-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 border border-slate-200/80 shadow-sm">
+                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-purple-50 text-purple-600 flex-shrink-0">
                   <Users className="h-4 w-4" />
                 </div>
                 <div>
@@ -56,8 +56,8 @@ export const Header = ({
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2 rounded-2xl bg-white px-3.5 py-2 border border-slate-200/80 shadow-sm">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+              <div className="flex items-center space-x-2 rounded-2xl bg-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 border border-slate-200/80 shadow-sm">
+                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-amber-50 text-amber-600 flex-shrink-0">
                   <Database className="h-4 w-4" />
                 </div>
                 <div>

@@ -160,7 +160,7 @@ export const FilterBar = ({
         </div>
 
         {/* Page Size & Action Buttons */}
-        <div className="flex items-center justify-between sm:col-span-12 lg:col-span-2 lg:justify-end space-x-2">
+        <div className="flex flex-wrap items-center justify-between sm:col-span-12 lg:col-span-2 lg:justify-end gap-2">
           
           <div className="flex items-center space-x-1 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1 text-xs text-slate-500">
             <span>Show</span>
@@ -175,22 +175,24 @@ export const FilterBar = ({
             </select>
           </div>
 
-          <button
-            onClick={onRefresh}
-            disabled={loading}
-            className="flex items-center space-x-1 rounded-xl bg-teal-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-teal-700 disabled:opacity-50"
-          >
-            <span>Apply Filters</span>
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={onRefresh}
+              disabled={loading}
+              className="flex items-center space-x-1 rounded-xl bg-teal-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-teal-700 disabled:opacity-50"
+            >
+              <span>Apply Filters</span>
+            </button>
 
-          <button
-            onClick={onClearFilters}
-            title="Reset filters"
-            className="flex items-center space-x-1 rounded-xl border border-slate-200 bg-white p-1.5 text-xs text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin text-teal-600' : ''}`} />
-            <span className="hidden xl:inline text-[11px]">Reset</span>
-          </button>
+            <button
+              onClick={onClearFilters}
+              title="Reset filters"
+              className="flex items-center space-x-1 rounded-xl border border-slate-200 bg-white p-1.5 text-xs text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin text-teal-600' : ''}`} />
+              <span className="inline text-[11px]">Reset</span>
+            </button>
+          </div>
 
         </div>
 

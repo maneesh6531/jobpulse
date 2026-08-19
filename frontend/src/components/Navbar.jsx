@@ -43,13 +43,13 @@ export const Navbar = ({
         </div>
 
         {/* Action Controls & Health Status */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-1.5 sm:space-x-3">
           
           {/* API Health Status Badge */}
           <button
             onClick={onRefreshHealth}
             title="Click to check API status"
-            className="flex items-center space-x-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium transition hover:bg-slate-100"
+            className="flex items-center space-x-1.5 sm:space-x-2 rounded-full border border-slate-200 bg-slate-50 px-2.5 sm:px-3 py-1 text-xs font-medium transition hover:bg-slate-100"
           >
             <span className="relative flex h-2 w-2">
               {isOnline ? (
@@ -64,7 +64,7 @@ export const Navbar = ({
               )}
             </span>
 
-            <span className="text-slate-700">
+            <span className="hidden sm:inline text-slate-700">
               {checkingHealth ? (
                 'Checking API...'
               ) : isOnline ? (
@@ -81,7 +81,7 @@ export const Navbar = ({
           <button
             onClick={onRefreshJobs}
             title="Refresh job feed"
-            className="flex items-center justify-center rounded-xl border border-slate-200 bg-white p-2 text-slate-500 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800"
+            className="flex items-center justify-center rounded-xl border border-slate-200 bg-white p-1.5 sm:p-2 text-slate-500 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800"
           >
             <RefreshCw className="h-4 w-4" />
           </button>
@@ -89,9 +89,9 @@ export const Navbar = ({
           {/* Primary CTA: Ingest Now */}
           <button
             onClick={onOpenIngestModal}
-            className="flex items-center space-x-2 rounded-xl bg-[#111A35] px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-95"
+            className="flex items-center space-x-1.5 sm:space-x-2 rounded-xl bg-[#111A35] px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-95 whitespace-nowrap"
           >
-            <Zap className="h-3.5 w-3.5 text-teal-400 fill-teal-400" />
+            <Zap className="h-3.5 w-3.5 text-teal-400 fill-teal-400 flex-shrink-0" />
             <span>Ingest Now</span>
           </button>
 

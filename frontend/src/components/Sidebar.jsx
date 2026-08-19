@@ -66,12 +66,12 @@ export const Sidebar = ({
 
           <div className="flex items-center justify-between rounded-xl bg-slate-50 p-2.5">
             <div className="flex items-center space-x-2 text-slate-600">
-              <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-cyan-100/60 text-cyan-700">
+              <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-cyan-100/60 text-cyan-700 flex-shrink-0">
                 <Database className="h-3.5 w-3.5" />
               </div>
               <span>Database</span>
             </div>
-            <span className="font-mono font-semibold text-slate-800">Supabase PostgreSQL</span>
+            <span className="font-mono font-semibold text-slate-800 text-right truncate max-w-[140px] sm:max-w-none">Supabase PostgreSQL</span>
           </div>
 
         </div>
